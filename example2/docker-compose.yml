@@ -10,6 +10,8 @@ services:
       MONGO_INITDB_DATABASE: pyrat
     restart: always
     command: mongod --auth
+    ports:
+      - 27017:27017
     volumes:
       - mongodbdata:/data/db
   web:
