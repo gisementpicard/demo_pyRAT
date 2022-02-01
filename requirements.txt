@@ -2,3 +2,6 @@ requests
 pyyaml
 fastapi
 uvicorn
+pymongo
+pydantic
+omegaconf
