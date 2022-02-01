@@ -1,5 +1,7 @@
 ---
 mongo:
-  hostname: localhost
+  hostname: mongo
   port: 27017
   db: pyrat
+  username: admin
+  password: root

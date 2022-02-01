@@ -1,7 +1,8 @@
 from pymongo import MongoClient
 from pymongo.database import Database 
-from models import Command, Result, RATModel
 from typing import Optional
+
+from server.models import Command, Result, RATModel
 
 class CollectionCrudClient:
     def __init__(self, database:Database, collection: str, cls) -> None:
@@ -44,5 +45,9 @@ class pyRATDBClient:
         else:
             self.client = MongoClient(host=host, port=port)
         self.database = self.client[database]
+        print(self.database)
         self.command = CollectionCrudClient(self.database, 'command', Command)
         self.result = CollectionCrudClient(self.database, 'result', Result)
+
+        print(self.command)
+        print(self.result)

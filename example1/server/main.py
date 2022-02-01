@@ -1,12 +1,13 @@
 from fastapi import FastAPI
-from models import Command, Result
 from omegaconf import OmegaConf 
 from typing import List
-from client import pyRATDBClient
+
+from server.client import pyRATDBClient
+from server.models import Command, Result
 
 app = FastAPI(openapi_url="/api/openapi.json", docs_url="/api/docs")
 
-SERVER_CONF_FILE = 'server_conf.yaml'
+SERVER_CONF_FILE = 'server/server_conf.yaml'
 conf = OmegaConf.load(SERVER_CONF_FILE)
 
 # DB INIT
@@ -46,14 +47,14 @@ def get_all_commands() -> List:
     return client.command.find({})
 
 ## RESULTS    
-@app.get("/result", tags=["Commands"])
+@app.get("/result", tags=["Results"])
 def get_all_results() -> List:
     return client.result.find({})
 
-@app.post("/result", tags=["Commands"])
+@app.post("/result", tags=["Results"])
 def post_command(result: Result) -> None:
     return client.result.create(result)
 
-@app.delete("/result/{result_id}", tags=["Commands"])
+@app.delete("/result/{result_id}", tags=["Results"])
 def delete_command(result_id: str) -> None:
     return client.result.delete(result_id)
