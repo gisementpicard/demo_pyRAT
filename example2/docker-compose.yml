@@ -2,20 +2,23 @@ version: '3'
 
 services:
   web:
-    build: nginx
+    image: nginx
     ports:
-      - 80:80
-      - 443:443
+      - 5000:5000
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-
-And this is t
     depends_on:
       - api
+    networks:
+      - nginx_network
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
   certbot:
     image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
   mongo:
     image: mongo
     hostname: mongodb
@@ -30,7 +33,7 @@ And this is t
     volumes:
       - mongodbdata:/data/db
   api:
-    build: DockerFile
+    build: .
     command: bash -c "python3 -m uvicorn server.main:app --host 0.0.0.0 --port 8080 --reload"
     volumes:
       - .:/code
@@ -38,8 +41,14 @@ And this is t
       - 8080:8080
     links:
     - mongo
+    networks:
+      - nginx_network
 
 
 volumes:
   mongodbdata:
     driver: local
+
+networks:
+  nginx_network:
+    driver: bridge
