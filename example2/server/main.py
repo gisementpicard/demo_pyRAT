@@ -63,4 +63,4 @@ def delete_command(result_id: str) -> None:
 @app.get("/register", tags=["Register"])
 def register_beacon() -> str:
     # TODO : create db for beacon with uuid
-    return "cookie"
+    return {"cookie": "cookie"}
